@@ -111,6 +111,3 @@ func (s *SinglyLL) Search(key any) (int, error) {
 		return idx, nil
 	}
 }
-
-type SinglyRingLL struct {
-}
