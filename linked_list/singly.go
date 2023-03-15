@@ -20,6 +20,7 @@ func (n noSuchElement) Error() string {
 // SinglyLL is a singly linked list
 type SinglyLL struct {
 	head *node
+	tail *node
 }
 
 // returnList returns array of all elements keys of SinglyLL
@@ -36,18 +37,16 @@ func (s *SinglyLL) returnList() []any {
 
 // MakeSinglyLL returns new entity of SinglyLL
 func MakeSinglyLL() *SinglyLL {
-	return &SinglyLL{nil}
+	return &SinglyLL{nil, nil}
 }
 
 // InsertHead inserts new element with the key in the head place of SinglyLL
 func (s *SinglyLL) InsertHead(key any) {
-	//if s.head == nil {
-	//	s.head.next = nil
-	//	s.head.key = key
-	//}
 	switch s.head {
 	case nil:
-		s.head = &node{nil, key}
+		n := &node{nil, key}
+		s.head = n
+		s.tail = n
 	default:
 		nextAfterHead := s.head
 		s.head = &node{nextAfterHead, key}
@@ -58,13 +57,14 @@ func (s *SinglyLL) InsertHead(key any) {
 func (s *SinglyLL) InsertTail(key any) {
 	switch s.head {
 	case nil:
-		s.head = &node{nil, key}
+		n := &node{nil, key}
+		s.head = n
+		s.tail = n
 	default:
-		current := s.head
-		for current.next != nil {
-			current = current.next
-		}
-		current.next = &node{nil, key}
+		tail := &node{nil, key}
+		beforeTail := s.tail
+		beforeTail.next = tail
+		s.tail = tail
 	}
 }
 
@@ -84,30 +84,36 @@ func (s *SinglyLL) Delete(key any) error {
 			previous = current
 			current = current.next
 		}
-		if current == nil {
+		//if current == nil {
+		//	return noSuchElement{key}
+		//}
+		//previous.next = current.next
+		//return nil
+		switch {
+		case current == nil:
 			return noSuchElement{key}
+		case current.next == nil:
+			s.tail = previous
+			previous.next = nil
+			return nil
+		default:
+			previous.next = current.next
+			return nil
 		}
-		previous.next = current.next
-		return nil
 	}
 }
 
 // Search returns sequence number of the first element with the key and nil error
 // -1 and noSuchElement error if there is no such element in the list
 func (s *SinglyLL) Search(key any) (int, error) {
-	switch s.head {
-	case nil:
-		return -1, noSuchElement{key}
-	default:
-		idx := 0
-		current := s.head
-		for current != nil && current.key != key {
-			current = current.next
-			idx++
-		}
-		if current == nil {
-			return -1, noSuchElement{key}
-		}
-		return idx, nil
+	idx := 0
+	current := s.head
+	for current != nil && current.key != key {
+		current = current.next
+		idx++
 	}
+	if current == nil {
+		return -1, noSuchElement{key}
+	}
+	return idx, nil
 }
