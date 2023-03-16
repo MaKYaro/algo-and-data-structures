@@ -1,16 +1,20 @@
 package linked_list
 
+// dNode is an element of DoublyLL
 type dNode struct {
 	prev *dNode
 	next *dNode
 	key  any
 }
 
+// DoublyLL is doubly linked list
 type DoublyLL struct {
 	head *dNode
 	tail *dNode
 }
 
+// returnList returns array of all elements keys of DoublyLL
+// in order they are in the DoublyLL starting with the head of the list
 func (d *DoublyLL) returnList() []any {
 	list := make([]any, 0)
 	current := d.head
@@ -21,10 +25,12 @@ func (d *DoublyLL) returnList() []any {
 	return list
 }
 
+// MakeDoublyLL returns new entity of DoublyLL
 func MakeDoublyLL() *DoublyLL {
 	return &DoublyLL{nil, nil}
 }
 
+// InsertHead inserts new element with the key in the head place of DoublyLL
 func (d *DoublyLL) InsertHead(key any) {
 	switch d.head {
 	case nil:
@@ -38,6 +44,7 @@ func (d *DoublyLL) InsertHead(key any) {
 	}
 }
 
+// InsertTail inserts new element with the key in the tail place of DoublyLL
 func (d *DoublyLL) InsertTail(key any) {
 	switch d.head {
 	case nil:
@@ -53,6 +60,8 @@ func (d *DoublyLL) InsertTail(key any) {
 
 }
 
+// Delete deletes first element with the key from DoublyLL
+// error is nil if there is element with the key or noSuchError otherwise
 func (d *DoublyLL) Delete(key any) error {
 	switch {
 	case d.head == nil:
@@ -83,6 +92,8 @@ func (d *DoublyLL) Delete(key any) error {
 	}
 }
 
+// Search returns sequence number of the first element with the key and nil error
+// -1 and noSuchElement error if there is no such element in the list
 func (d *DoublyLL) Search(key any) (int, error) {
 	idx := 0
 	current := d.head
