@@ -47,3 +47,19 @@ func (r *RingLL) InsertHead(key any) {
 		r.tail.next = n
 	}
 }
+
+// InsertTail method inserts new element with the key in the tail place of RingLL
+func (r *RingLL) InsertTail(key any) {
+	switch r.head {
+	case nil:
+		n := &rNode{true, nil, key}
+		n.next = n
+		r.head = n
+		r.tail = n
+	default:
+		n := &rNode{true, r.head, key}
+		r.tail.next = n
+		r.tail.isTail = false
+		r.tail = n
+	}
+}
