@@ -63,3 +63,56 @@ func (r *RingLL) InsertTail(key any) {
 		r.tail = n
 	}
 }
+
+// Delete deletes first element with the key from RingLL
+// error is nil if there is element with the key or noSuchError otherwise
+func (r *RingLL) Delete(key any) error {
+	switch {
+	case r.head == nil:
+		return noSuchElement{key}
+	case r.head.key == key:
+		r.head = r.head.next
+		r.tail.next = r.head
+		return nil
+	default:
+		previous := r.head
+		current := r.head.next
+		for current.isTail != true && current.key != key {
+			previous = current
+			current = current.next
+		}
+		switch {
+		case current.isTail && current.key != key:
+			return noSuchElement{key}
+		case current.isTail:
+			previous.next = r.head
+			previous.isTail = true
+			r.tail = previous
+			return nil
+		default:
+			previous.next = current.next
+			return nil
+		}
+	}
+}
+
+// Search returns sequence number of the first element with the key and nil error
+// -1 and noSuchElement error if there is no such element in the list
+func (r *RingLL) Search(key any) (int, error) {
+	idx := 0
+	current := r.head
+	if current == nil {
+		return -1, noSuchElement{key}
+	}
+	for current.isTail != true && current.key != key {
+		current = current.next
+		idx++
+	}
+	switch {
+	case current.isTail && current.key != key:
+		return -1, noSuchElement{key}
+	case current.isTail:
+		return idx, nil
+	}
+	return idx, nil
+}
