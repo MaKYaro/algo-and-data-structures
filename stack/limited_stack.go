@@ -4,13 +4,13 @@ import "fmt"
 
 // LimitedStack contains defined number of elements
 type LimitedStack struct {
-	cap uint
+	cap int
 	arr []any
 }
 
 // fullStackError occurs when user tries to add cap + 1 element to LimitedStack
 type fullStackError struct {
-	cap uint
+	cap int
 }
 
 func (e fullStackError) Error() string {
@@ -18,8 +18,8 @@ func (e fullStackError) Error() string {
 }
 
 // MakeLimitedStack creates new LimitedStack entity
-func MakeLimitedStack(cap uint) LimitedStack {
-	return LimitedStack{cap, make([]any, cap)}
+func MakeLimitedStack(cap int) LimitedStack {
+	return LimitedStack{cap, make([]any, 0, cap)}
 }
 
 // Empty returns true if LimitedStack is empty
