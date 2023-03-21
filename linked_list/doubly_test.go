@@ -60,3 +60,34 @@ func TestDoublyLL_InsertTail(t *testing.T) {
 		})
 	}
 }
+
+func TestDoublyLL_Reverse(t *testing.T) {
+	var tests = []struct {
+		in  []any
+		out []any
+	}{
+		{[]any{}, []any{}},
+		{[]any{1}, []any{1}},
+		{[]any{1, 2}, []any{2, 1}},
+		{[]any{true, 2, 'q', "you"}, []any{"you", 'q', 2, true}},
+	}
+
+	for idx, test := range tests {
+		name := fmt.Sprintf("case %v", idx)
+		t.Run(name, func(t *testing.T) {
+			list := MakeDoublyLL()
+			for _, elem := range test.in {
+				list.InsertTail(elem)
+			}
+			list.Reverse()
+			gotList := list.returnList()
+			wantList := test.out
+			for i, got := range gotList {
+				want := wantList[i]
+				if got != want {
+					t.Errorf("got %v want %v", got, want)
+				}
+			}
+		})
+	}
+}

@@ -106,3 +106,26 @@ func (d *DoublyLL) Search(key any) (int, error) {
 	}
 	return idx, nil
 }
+
+// Reverse reverses DoublyLL
+// head becomes tail, tail becomes head
+// each dNode.prev has value of dNode.next otherwise dNode.next has value of dNode.prev
+func (d *DoublyLL) Reverse() {
+	switch d.head {
+	case nil:
+	default:
+		tail := d.tail
+		current := d.head
+		for current.next != nil {
+			next := current.next
+			tmp := current.prev
+			current.prev = current.next
+			current.next = tmp
+			current = next
+		}
+		tail.next = tail.prev
+		tail.prev = nil
+		d.head, d.tail = d.tail, d.head
+	}
+
+}
