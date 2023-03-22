@@ -116,3 +116,26 @@ func (r *RingLL) Search(key any) (int, error) {
 	}
 	return idx, nil
 }
+
+// Reverse reverses RingLL
+// head becomes tail, tail becomes head
+// each node.next has value of its previous element
+func (r *RingLL) Reverse() {
+	switch {
+	case r.head == nil:
+	case r.head.isTail:
+	default:
+		var next *rNode
+		previous := r.tail
+		current := r.head
+		for !current.isTail {
+			next = current.next
+			current.next = previous
+			previous = current
+			current = next
+		}
+		current.next = previous
+		r.head, r.tail = r.tail, r.head
+		r.tail.isTail, r.head.isTail = true, false
+	}
+}
