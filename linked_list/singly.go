@@ -117,3 +117,23 @@ func (s *SinglyLL) Search(key any) (int, error) {
 	}
 	return idx, nil
 }
+
+// Reverse reverses SinglyLL
+// head becomes tail, tail becomes head
+// each node.prev has value of its previous element
+func (s *SinglyLL) Reverse() {
+	switch s.head {
+	case nil:
+	default:
+		var previous *node = nil
+		head, tail := s.head, s.tail
+		current := s.head
+		for current != nil {
+			next := current.next
+			current.next = previous
+			previous = current
+			current = next
+		}
+		s.head, s.tail = tail, head
+	}
+}
