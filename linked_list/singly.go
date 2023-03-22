@@ -120,7 +120,7 @@ func (s *SinglyLL) Search(key any) (int, error) {
 
 // Reverse reverses SinglyLL
 // head becomes tail, tail becomes head
-// each node.prev has value of its previous element
+// each node.next has value of its previous element
 func (s *SinglyLL) Reverse() {
 	switch s.head {
 	case nil:
