@@ -137,3 +137,13 @@ func (s *SinglyLL) Reverse() {
 		s.head, s.tail = tail, head
 	}
 }
+
+// Head returns key of the head element of the SinglyLL
+func (s *SinglyLL) Head() any {
+	return s.head.key
+}
+
+// Tail returns key of the tail element of the SinglyLL
+func (s *SinglyLL) Tail() any {
+	return s.tail.key
+}
