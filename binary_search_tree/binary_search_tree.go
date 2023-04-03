@@ -6,15 +6,23 @@ import (
 	"golang.org/x/exp/constraints"
 )
 
-type node[T constraints.Ordered] struct {
+type noSuchElement[T constraints.Ordered] struct {
+	elem T
+}
+
+func (n noSuchElement[T]) Error() string {
+	return fmt.Sprintf("no such element: %v", n.elem)
+}
+
+type Node[T constraints.Ordered] struct {
 	key   T
-	p     *node[T]
-	left  *node[T]
-	right *node[T]
+	p     *Node[T]
+	left  *Node[T]
+	right *Node[T]
 }
 
 type BinarySearchTree[T constraints.Ordered] struct {
-	root *node[T]
+	root *Node[T]
 }
 
 // MakeBinarySearchTree function makes new binary search tree
@@ -48,7 +56,7 @@ func (t *BinarySearchTree[T]) InOrderedTreeWalk() []T {
 			if err != nil {
 				fmt.Println(err)
 			}
-			current = tmp.(*node[T])
+			current = tmp.(*Node[T])
 			result = append(result, current.key)
 			current = current.right
 		}
@@ -59,7 +67,7 @@ func (t *BinarySearchTree[T]) InOrderedTreeWalk() []T {
 // Insert is method in a binary search tree is used to add a new node to the tree
 // while maintaining the binary search tree property
 func (t *BinarySearchTree[T]) Insert(key T) {
-	var previous, current *node[T]
+	var previous, current *Node[T]
 	previous = nil
 	current = t.root
 	for current != nil {
@@ -72,10 +80,25 @@ func (t *BinarySearchTree[T]) Insert(key T) {
 	}
 	switch {
 	case previous == nil:
-		t.root = &node[T]{key, nil, nil, nil}
+		t.root = &Node[T]{key, nil, nil, nil}
 	case key > previous.key:
-		previous.right = &node[T]{key, previous, nil, nil}
+		previous.right = &Node[T]{key, previous, nil, nil}
 	default:
-		previous.left = &node[T]{key, previous, nil, nil}
+		previous.left = &Node[T]{key, previous, nil, nil}
 	}
+}
+
+func (t *BinarySearchTree[T]) Search(key T) (*Node[T], error) {
+	current := t.root
+	for current != nil {
+		switch {
+		case current.key == key:
+			return current, nil
+		case current.key > key:
+			current = current.left
+		case current.key < key:
+			current = current.right
+		}
+	}
+	return nil, noSuchElement[T]{key}
 }
