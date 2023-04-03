@@ -6,12 +6,35 @@ import (
 	"golang.org/x/exp/constraints"
 )
 
-type noSuchElement[T constraints.Ordered] struct {
+type NoSuchKey[T constraints.Ordered] struct {
 	elem T
 }
 
-func (n noSuchElement[T]) Error() string {
+func (n NoSuchKey[T]) Error() string {
 	return fmt.Sprintf("no such element: %v", n.elem)
+}
+
+type EmptyTree[T constraints.Ordered] struct {
+}
+
+func (n EmptyTree[T]) Error() string {
+	return fmt.Sprintf("tree is empty")
+}
+
+type NoSuccessor[T constraints.Ordered] struct {
+	elem T
+}
+
+func (n NoSuccessor[T]) Error() string {
+	return fmt.Sprintf("there is no successor for %v", n.elem)
+}
+
+type NoPredecessor[T constraints.Ordered] struct {
+	elem T
+}
+
+func (n NoPredecessor[T]) Error() string {
+	return fmt.Sprintf("there is no predecessor fot %v", n.elem)
 }
 
 type Node[T constraints.Ordered] struct {
@@ -19,6 +42,36 @@ type Node[T constraints.Ordered] struct {
 	p     *Node[T]
 	left  *Node[T]
 	right *Node[T]
+}
+
+// Min returns link to Node with minimum key in the binary search subtree
+// or nil if subtree is empty
+func (n *Node[T]) Min() (*Node[T], error) {
+	current := n
+	switch current {
+	case nil:
+		return nil, EmptyTree[T]{}
+	default:
+		for current.left != nil {
+			current = current.left
+		}
+		return current, nil
+	}
+}
+
+// Max returns link to Node with maximum key in the binary search subtree
+// or nil if subtree is empty
+func (n *Node[T]) Max() (*Node[T], error) {
+	current := n
+	switch current {
+	case nil:
+		return nil, EmptyTree[T]{}
+	default:
+		for current.right != nil {
+			current = current.right
+		}
+		return current, nil
+	}
 }
 
 type BinarySearchTree[T constraints.Ordered] struct {
@@ -88,6 +141,8 @@ func (t *BinarySearchTree[T]) Insert(key T) {
 	}
 }
 
+// Search method returns link to Node with key and nil error
+// or nil and noSuchElement if there is no element with key
 func (t *BinarySearchTree[T]) Search(key T) (*Node[T], error) {
 	current := t.root
 	for current != nil {
@@ -100,5 +155,17 @@ func (t *BinarySearchTree[T]) Search(key T) (*Node[T], error) {
 			current = current.right
 		}
 	}
-	return nil, noSuchElement[T]{key}
+	return nil, NoSuchKey[T]{key}
+}
+
+// Min returns link to Node with minimum key in the binary search tree
+// or nil if tree is empty
+func (t *BinarySearchTree[T]) Min() (*Node[T], error) {
+	return t.root.Min()
+}
+
+// Max returns link to Node with maximum key in the binary search tree
+// or nil if tree is empty
+func (t *BinarySearchTree[T]) Max() (*Node[T], error) {
+	return t.root.Max()
 }
