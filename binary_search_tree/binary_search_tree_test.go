@@ -134,3 +134,77 @@ func TestBinarySearchTree_Max(t *testing.T) {
 		})
 	}
 }
+
+func TestNode_Successor(t *testing.T) {
+	var tests = []struct {
+		in   []int
+		elem int
+		suc  int
+		err  error
+	}{
+		{[]int{1, 2, 3, 4, 5}, 5, 0, NoSuccessor[int]{5}},
+		{[]int{6, 17, 9, 4, 58, 38, 12, 54}, 4, 6, nil},
+		{[]int{6, 17, 9, 4, 58, 38, 12, 54}, 6, 9, nil},
+		{[]int{6, 17, 9, 4, 58, 38, 12, 54}, 9, 12, nil},
+		{[]int{6, 17, 9, 4, 58, 38, 12, 54}, 12, 17, nil},
+		{[]int{6, 17, 9, 4, 58, 38, 12, 54}, 17, 38, nil},
+	}
+	for idx, test := range tests {
+		name := fmt.Sprintf("case %v", idx)
+		t.Run(name, func(t *testing.T) {
+			bst := MakeBinarySearchTree[int]()
+			for _, elem := range test.in {
+				bst.Insert(elem)
+			}
+			n, _ := bst.Search(test.elem)
+			gotNode, gotErr := n.Successor()
+			want, wantErr := test.suc, test.err
+			if gotErr != wantErr {
+				t.Errorf("got error %v want error %v", gotErr, wantErr)
+			}
+			if gotErr == nil {
+				got := gotNode.key
+				if got != want {
+					t.Errorf("got %v want %v", got, want)
+				}
+			}
+		})
+	}
+}
+
+func TestNode_Predecessor(t *testing.T) {
+	var tests = []struct {
+		in   []int
+		elem int
+		pre  int
+		err  error
+	}{
+		{[]int{1, 2, 3, 4, 5}, 1, 0, NoSuccessor[int]{1}},
+		{[]int{6, 17, 9, 4, 58, 38, 12, 54}, 6, 4, nil},
+		{[]int{6, 17, 9, 4, 58, 38, 12, 54}, 9, 6, nil},
+		{[]int{6, 17, 9, 4, 58, 38, 12, 54}, 12, 9, nil},
+		{[]int{6, 17, 9, 4, 58, 38, 12, 54}, 17, 12, nil},
+		{[]int{6, 17, 9, 4, 58, 38, 12, 54}, 38, 17, nil},
+	}
+	for idx, test := range tests {
+		name := fmt.Sprintf("case %v", idx)
+		t.Run(name, func(t *testing.T) {
+			bst := MakeBinarySearchTree[int]()
+			for _, elem := range test.in {
+				bst.Insert(elem)
+			}
+			n, _ := bst.Search(test.elem)
+			gotNode, gotErr := n.Predecessor()
+			want, wantErr := test.pre, test.err
+			if gotErr != wantErr {
+				t.Errorf("got error %v want error %v", gotErr, wantErr)
+			}
+			if gotErr == nil {
+				got := gotNode.key
+				if got != want {
+					t.Errorf("got %v want %v", got, want)
+				}
+			}
+		})
+	}
+}

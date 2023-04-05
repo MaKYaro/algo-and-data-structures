@@ -74,6 +74,50 @@ func (n *Node[T]) Max() (*Node[T], error) {
 	}
 }
 
+// Successor returns link to Node with the minimum key among all keys greater than the given one
+// or nil if key is biggest in the tree
+func (n *Node[T]) Successor() (*Node[T], error) {
+	switch n.right {
+	case nil:
+		current := n
+		for current.p != nil && current != current.p.left {
+			current = current.p
+		}
+		if current.p == nil {
+			return nil, NoSuccessor[T]{n.key}
+		}
+		return current.p, nil
+	default:
+		successor, err := n.right.Min()
+		if err != nil {
+			fmt.Println(err)
+		}
+		return successor, nil
+	}
+}
+
+// Predecessor returns link to Node with the maximum key among all keys smaller than the given one
+// or nil if key is smallest in the tree
+func (n *Node[T]) Predecessor() (*Node[T], error) {
+	switch n.left {
+	case nil:
+		current := n
+		for current.p != nil && current != current.p.right {
+			current = current.p
+		}
+		if current.p == nil {
+			return nil, NoPredecessor[T]{n.key}
+		}
+		return current.p, nil
+	default:
+		predecessor, err := n.left.Max()
+		if err != nil {
+			fmt.Println(err)
+		}
+		return predecessor, nil
+	}
+}
+
 type BinarySearchTree[T constraints.Ordered] struct {
 	root *Node[T]
 }
