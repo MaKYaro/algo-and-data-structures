@@ -208,3 +208,34 @@ func TestNode_Predecessor(t *testing.T) {
 		})
 	}
 }
+
+func TestBinarySearchTree_Delete(t *testing.T) {
+	var tests = []struct {
+		in      []int
+		elem    int
+		wantBst []int
+	}{
+		{[]int{1}, 1, []int{}},
+		{[]int{1, 2, 3, 4}, 4, []int{1, 2, 3}},
+		{[]int{6, 17, 9, 4, 58, 38, 12, 54}, 12, []int{4, 6, 9, 17, 38, 54, 58}},
+		{[]int{6, 17, 9, 4, 58, 38, 12, 54}, 17, []int{4, 6, 9, 12, 38, 54, 58}},
+	}
+	for idx, test := range tests {
+		name := fmt.Sprintf("case %v", idx)
+		t.Run(name, func(t *testing.T) {
+			bst := MakeBinarySearchTree[int]()
+			for _, elem := range test.in {
+				bst.Insert(elem)
+			}
+			n, _ := bst.Search(test.elem)
+			bst.Delete(n)
+			gotBst := bst.InOrderedTreeWalk()
+			for i, want := range test.wantBst {
+				got := gotBst[i]
+				if got != want {
+					t.Errorf("got %v want %v", got, want)
+				}
+			}
+		})
+	}
+}

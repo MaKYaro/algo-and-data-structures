@@ -213,3 +213,42 @@ func (t *BinarySearchTree[T]) Min() (*Node[T], error) {
 func (t *BinarySearchTree[T]) Max() (*Node[T], error) {
 	return t.root.Max()
 }
+
+// Transplant replaces u subtree with v subtree in BinarySearchTree
+func (t *BinarySearchTree[T]) Transplant(u, v *Node[T]) {
+	switch {
+	case u.p == nil:
+		t.root = v
+	case u == u.p.left:
+		u.p.left = v
+	default:
+		u.p.right = v
+	}
+	if v != nil {
+		v.p = u.p
+	}
+}
+
+// Delete method removes n node from BinarySearchTree
+func (t *BinarySearchTree[T]) Delete(n *Node[T]) {
+	switch {
+	case n.left == nil:
+		t.Transplant(n, n.right)
+	case n.right == nil:
+		t.Transplant(n, n.left)
+	default:
+		y, err := n.right.Min()
+		if err != nil {
+			fmt.Println(err)
+		}
+		if n != y.p {
+			t.Transplant(y, y.right)
+			y.right = n.right
+			y.right.p = y
+		}
+		t.Transplant(n, y)
+		y.left = n.left
+		y.left.p = y
+
+	}
+}
