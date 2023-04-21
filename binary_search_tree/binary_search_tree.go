@@ -22,19 +22,19 @@ func (n EmptyTree[T]) Error() string {
 }
 
 type NoSuccessor[T constraints.Ordered] struct {
-	elem T
+	Elem T
 }
 
 func (n NoSuccessor[T]) Error() string {
-	return fmt.Sprintf("there is no successor for %v", n.elem)
+	return fmt.Sprintf("there is no successor for %v", n.Elem)
 }
 
 type NoPredecessor[T constraints.Ordered] struct {
-	elem T
+	Elem T
 }
 
 func (n NoPredecessor[T]) Error() string {
-	return fmt.Sprintf("there is no predecessor fot %v", n.elem)
+	return fmt.Sprintf("there is no predecessor fot %v", n.Elem)
 }
 
 type Node[T constraints.Ordered] struct {
