@@ -7,11 +7,11 @@ import (
 )
 
 type NoSuchKey[T constraints.Ordered] struct {
-	elem T
+	Elem T
 }
 
 func (n NoSuchKey[T]) Error() string {
-	return fmt.Sprintf("no such element: %v", n.elem)
+	return fmt.Sprintf("no such element: %v", n.Elem)
 }
 
 type EmptyTree[T constraints.Ordered] struct {
